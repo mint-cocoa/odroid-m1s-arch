@@ -295,3 +295,9 @@ gzip -dc /path/to/full_device_image.img.gz | dd of=/dev/sdX bs=4M status=progres
    here: [wiki.odroid.com](https://wiki.odroid.com/odroid-m1s/getting_started/os_installation_guide?redirect=1#install_over_usb_from_pc)
 2. Insert the SD card into the M1S.
 3. Reboot the M1S while shorting the mask ROM pin with GND for a few seconds.
+
+## Going forward
+
+The last thing i started fiddling with, was TPM, OP-TEE (Truested Execution Environment), UKI and stuff.. You'll find a
+starting point in the `build_u-boot.sh` script, but i never really continued on that. But it should be possible
+to add this stuff as well.
