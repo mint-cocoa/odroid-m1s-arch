@@ -30,7 +30,7 @@ to see the output and troubleshoot/debug.
 
 > **Info:** You find the default config we used in [u-boot/config](../../../u-boot/config).
 It has the UMS command to set the device to USB Mass Storage mode and has HDMI and 
-USB keyboard support.
+USB keyboard support. Copy the file to `/usr/src/your-u-boot-source/.config`
 
 - Ensure that you have the correct permissions to run the script and that your user
   has the necessary privileges to install packages if using the --install-deps option.
