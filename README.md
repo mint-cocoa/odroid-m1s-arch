@@ -111,8 +111,12 @@ use it, it's super simple!
 
 3. Flash that:
 
+Replace sdX with the actual device that your OS presents you for the attached USB mass storage.
+Let's assume it's `/dev/sdc`. Note that we don't set a partition number like `/dev/sdc1`!
+The u-boot bootloader will be written in the first 16MB on the emmc of your M1S.
+
 ```bash
-dd if=u-boot-rockchip.bin of=/dev/mmcblk0 bs=32k seek=1 conv=fsync
+dd if=u-boot-rockchip.bin of=/dev/sdX bs=32k seek=1 conv=fsync
 ```
 
 ## Partitions
@@ -120,7 +124,7 @@ dd if=u-boot-rockchip.bin of=/dev/mmcblk0 bs=32k seek=1 conv=fsync
 Create two partitions: `BOOT` and `rootfs`. The BOOT partition starts at 16MB to allow
 room for the U-Boot blob.
 
-1. Use the following `gdisk` commands to create the partitions:
+1. Use the following `gdisk` commands to create the partitions (i.E. `gdisk /dev/sdX`):
 
    ```bash
    d               # Delete partition 1
@@ -128,7 +132,7 @@ room for the U-Boot blob.
 
    n               # Create a new partition
    1               # Partition number 1
-   32768           # Start sector at 16MB
+   32768           # Start sector at 16MB so we won't overwrite u-boot
    +256M           # Size of the first partition
    8300            # Set type to Linux filesystem
    n               # Create a new partition
@@ -156,6 +160,9 @@ itself may take a long time.
 ### Get the Kernel
 
 Clone the Linux kernel repository:
+
+**Note:** When i was working on that, the patches were accepted in the kernel repo, but not yet merged.
+The kernel version I used was v6.11-rc5-54-g4f4c35cc85fd
 
 ```bash
 git clone https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
@@ -229,7 +236,7 @@ mkimage -A arm -T ramdisk -C gzip -d /boot/initramfs-linux.img <odroid>/mmcblk0p
 ## Boot the Odroid
 
 > **WARNING:** You **WILL** need serial console access.
->
+
 Access the U-Boot console by pressing `CTRL-C` or the `any key` rapidly after powering
 on the Odroid.
 
@@ -252,6 +259,8 @@ booti ${kernel_addr_r} ${ramdisk_addr_r} ${fdt_addr_r}
 > properly from there.
 > We acknowledge the risk of eMMC wear, which is acceptable given the expected device
 > lifespan.
+
+Install u-boot-tools `apt-get install u-boot-tools`
 
 Create the file [boot.cmd](scripts/u-boot/boot.cmd) and generate boot.scr:
 
